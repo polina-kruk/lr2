@@ -1,0 +1,14 @@
+||Функциональность||Описание||
+|JSON Logs|Логи api, mcp, web в JSON в stdout, одна строка = одно событие, стек внутри строки|
+|Log Fields|Поля {{time}} (ISO 8601, UTC), {{level}} (строкой), {{version}} (из {{APP_VERSION}}), {{context}}, {{msg}}; {{traceId}}, {{userId}}, {{actor}}, {{event}} там, где применимо|
+|Log Groups|Вложенные группы {{http}}, {{job}}, {{out}}, {{db}}, {{ctx}}, {{err}} по {{log-format-devops.md}}|
+|Log Levels|{{debug}} / {{info}} / {{warn}} / {{error}} / {{fatal}}, порог через {{LOG_LEVEL}}, по умолчанию {{info}}|
+|Request Log|Одна строка на завершённый HTTP-запрос: {{method}}, {{route}} (шаблон), {{statusCode}}, {{durationMs}}|
+|Trace ID|{{traceId}} (32 hex) из {{traceparent}}, иначе из {{X-Request-Id}} (его присваивает Caddy, UUID приводится к 32 hex), иначе новый; возврат в ответе заголовком {{X-Request-Id}}; передача web → api, mcp → api|
+|Redact|Секреты, токены, заголовки авторизации и персональные данные убираются настройкой логгера|
+|Healthcheck Logs|Запросы с {{User-Agent: docker-healthcheck}} пишутся на уровне {{debug}}|
+|Job Logs|{{job.started}} / {{job.finished}} для всех фоновых задач|
+|Outbound Logs|Вызовы внешних систем (HRM, Salesforce, Jira, Google) с результатом и длительностью|
+|Web Errors|Серверные ошибки Next.js через {{instrumentation.ts}} ({{onRequestError}})|
+|Graceful Shutdown|{{enableShutdownHooks}} в api с ожиданием текущих запросов; быстрое завершение web по SIGTERM|
+|Metrics|{{prom-client}} на внутреннем порту {{9464}}, путь {{/metrics}}, во всех трёх сервисах|
